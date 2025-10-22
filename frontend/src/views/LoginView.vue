@@ -1,8 +1,8 @@
 <script setup>
-const API_URL = import.meta.env.VITE_API_URL;
 import { reactive } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const authStore = useAuthStore();
 
@@ -31,7 +31,7 @@ const onLogin = async () => {
     authStore.setToken(data.access_token);
 
     await authStore.fetchCurrentUser();
-    if (authStore.currentSuer) {
+    if (authStore.currentUser) {
       router.push("/");
     }
     router.push("/");

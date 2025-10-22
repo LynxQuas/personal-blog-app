@@ -52,7 +52,6 @@ export const deleteBlog = async (blog_id, token) => {
 };
 
 export const createBlog = async (blogData, token) => {
-  console.log(token);
   const res = await fetch(`${API_URL}/blogs/`, {
     method: "POST",
     headers: {

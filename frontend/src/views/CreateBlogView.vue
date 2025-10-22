@@ -27,7 +27,6 @@ const onCreateBlog = async () => {
   isCreating.value = true;
   try {
     const data = await createBlog(state, auth.token);
-    console.log(data);
 
     if (data?.detail) {
       modal.message = data.detail.map((err) => err.msg);
