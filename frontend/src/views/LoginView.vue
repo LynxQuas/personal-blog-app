@@ -1,4 +1,5 @@
 <script setup>
+const API_URL = import.meta.env.VITE_API_URL;
 import { reactive } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
@@ -18,7 +19,7 @@ const onLogin = async () => {
     formBody.append("username", userData.name);
     formBody.append("password", userData.password);
 
-    const res = await fetch("http://127.0.0.1:8000/api/v1/auth/login", {
+    const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: formBody.toString(),
