@@ -1,6 +1,4 @@
-import os
 from fastapi import FastAPI
-from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from app.dependencies import init_db
 from contextlib import asynccontextmanager
@@ -16,15 +14,16 @@ async def lifespan(app: FastAPI):
     yield
     print("🛑 Shutdown event running...")
     
-
 app = FastAPI(lifespan=lifespan)
 
+origins = [
+    "http://localhost:5173",  
+    "https://personal-blog-app.netlify.app/",  
+]
 
-load_dotenv() 
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
