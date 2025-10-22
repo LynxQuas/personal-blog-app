@@ -1,5 +1,6 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("access_token") || null);
@@ -27,7 +28,7 @@ export const useAuthStore = defineStore("auth", () => {
   async function fetchCurrentUser() {
     if (!token.value) return null;
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/v1/auth/me", {
+      const res = await fetch(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
