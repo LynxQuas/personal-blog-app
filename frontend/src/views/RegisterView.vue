@@ -27,32 +27,29 @@ const onRegister = async () => {
   ) {
     registerData.error = "Fields must be filled.";
     return;
-  }
-
-  if (registerData.userData.password !== registerData.userData.confirmation) {
+  } else if (registerData.userData.password !== registerData.userData.confirmation) {
     registerData.error = "Password do not match.";
     return;
-  }
-
-  registerData.isLoading = true;
-  try {
-    // const res = await fetch(`http://127.0.0.1:8000/api/v1/users`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(registerData.userData),
-    // });
-
-    const data = await register(registerData.userData);
-    router.push("/login");
-    if (!data) {
-      throw new Error("Something went wrong.");
+  } else if (registerData.userData.password.length < 6) {
+    registerData.error = "Password must be at least 6 characters.";
+    return;
+  } else if (registerData.userData.username.length < 6) {
+    registerData.error = "Username must be at least 6 characters.";
+    return;
+  } else {
+    registerData.isLoading = true;
+    try {
+      const data = await register(registerData.userData);
+      if (data.detail) {
+        registerData.error = data.detail;
+        return;
+      }
+      router.push("/login");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      registerData.isLoading = false;
     }
-  } catch (err) {
-    console.log(err);
-  } finally {
-    registerData.isLoading = false;
   }
 };
 </script>
@@ -62,7 +59,7 @@ const onRegister = async () => {
     <form @submit.prevent="onRegister" class="bg-white w-full">
       <div class="flex flex-1 flex-col gap-y-4 justify-center items-center min-h-screen">
         <h2 class="text-2xl font-semibold">Login</h2>
-        <h2>{{ registerData.error && registerData.error }}</h2>
+        <h2 class="text-red-500">{{ registerData.error && registerData.error }}</h2>
         <input
           type="text"
           name="name"
