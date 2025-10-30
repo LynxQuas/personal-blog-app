@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 const API_URL = import.meta.env.VITE_API_URL;
@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const authStore = useAuthStore();
 
 const router = useRouter();
+const error = ref("");
 
 const userData = reactive({
   name: "",
@@ -14,6 +15,10 @@ const userData = reactive({
 });
 
 const onLogin = async () => {
+  if (!userData.name || !userData.password) {
+    error.value = "Please fill in all fields.";
+    return;
+  }
   try {
     const formBody = new URLSearchParams();
     formBody.append("username", userData.name);
@@ -36,7 +41,8 @@ const onLogin = async () => {
     }
     router.push("/");
   } catch (err) {
-    console.error(err.message);
+    error.value = err.message;
+    console.error("Login error:", err);
   }
 };
 </script>
@@ -45,6 +51,7 @@ const onLogin = async () => {
   <form @submit.prevent="onLogin" class="w-full">
     <div class="flex flex-1 flex-col gap-y-4 justify-center items-center min-h-screen">
       <h2 class="text-2xl font-semibold">Login</h2>
+      <h2 class="text-red-500">{{ error }}</h2>
       <input
         type="text"
         class="py-4 px-4 border border-gray-400 w-full md:w-[25rem] rounded-md"
